@@ -1,6 +1,5 @@
 version: 2.1
-orbs: 
-    slack: circleci/slack@4.10.1
+
 executors:
   node:
     docker:
@@ -12,63 +11,51 @@ executors:
     docker:
       - image: amazon/aws-cli
 
-commands:
+# commands:
 
-  notify_on_failure:
-    steps:
-    - slack/notify:
-        event: fail
-        channel: EGFwd-T3-August-22
-        template: basic_fail_1
+ 
 
 
-  notify_on_success:
-    docker:
-    - image: cimg/base:stable
-    steps:
-    - slack/notify:
-        event: pass
-        channel: EGFwd-T3-August-22
-        template: success_tagged_deployment_1
+  
 
 
-destroy-environment:
-  description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-  parameters:
-    Workflow_ID:
-      type: string
-      default: ${CIRCLE_WORKFLOW_ID:0:7}
-  steps:
-    - run:
-        name: Destroy environments
-        when: on_fail
-        command: |
-          # Empty frontend bucket
-          aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+# destroy-environment:
+#   description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+#   parameters:
+#     Workflow_ID:
+#       type: string
+#       default: ${CIRCLE_WORKFLOW_ID:0:7}
+#   steps:
+#     - run:
+#         name: Destroy environments
+#         when: on_fail
+#         command: |
+#           # Empty frontend bucket
+#           aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
 
-          # Delete frontend stack
-          aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
+#           # Delete frontend stack
+#           aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
 
-          # Delete backend stack
-          aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
-  revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.
-    parameters:
-      # Add parameter here     
-    steps:
-      - run:
-          name: Revert migrations
-          # Add when this will run
-          command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
-            if(( $SUCCESS==1 )); 
-            then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
-            fi
+#           # Delete backend stack
+#           aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
+#   revert-migrations:
+#     description: Revert the last migration if successfully run in the current workflow.
+#     parameters:
+#       # Add parameter here     
+#     steps:
+#       - run:
+#           name: Revert migrations
+#           # Add when this will run
+#           command: |
+#             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+#             SUCCESS = 1
+#             if(( $SUCCESS==1 )); 
+#             then
+#             #  cd ~/project/backend
+#             #  npm install
+#             #  Add revert code here. You can find this in the Getting Started section.
+#               exit 1
+#             fi
             
 jobs:
   build-frontend:
