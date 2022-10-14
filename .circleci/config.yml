@@ -94,33 +94,37 @@ jobs:
           key: backend-deps
       # - notify_on_failure
 
-  # test-frontend:
-  #   executor: node
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [frontend-test]
-  #     - run:
-  #         name: Front-end test
-  #         command:  |
-  #           cd frontend
-  #           npm install
-  #           npm run test
-  #     # - notify_on_failure
+  test-frontend:
+    executor: node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-deps]
+      - run:
+          name: Front-end test
+          command:  |
+            cd frontend
+            npm install
+            npm run test
+      # - notify_on_failure
                 
-#   test-backend:
-#     executor: node
-#     steps:
-#       - checkout
-#       - restore_cache:
-#           keys: [backend-test]
-#       - run:
-#           name: Back-end test
-#           command:  |
-#             cd backend
-#             npm install
-#             npm run test
-#       # - notify_on_failure
+  test-backend:
+    executor: node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-deps]
+      - run:
+          name: Back-end test
+          command:  |
+            cd backend
+            npm install
+            npm run test
+      
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-deps
+      # - notify_on_failure
             
 #   scan-frontend:
 #     executor: node
@@ -162,10 +166,10 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
       # - scan-backend:
       #     requires: [build-backend]
       # - scan-frontend:
