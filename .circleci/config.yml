@@ -74,7 +74,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - notify_on_failure
+      # - notify_on_failure
 
   build-backend:
     executor: node
@@ -92,7 +92,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-      - notify_on_failure
+      # - notify_on_failure
 
   test-frontend:
     executor: node
@@ -106,7 +106,7 @@ jobs:
             cd frontend
             npm install
             npm run test
-      - notify_on_failure
+      # - notify_on_failure
                 
   test-backend:
     executor: node
@@ -120,7 +120,7 @@ jobs:
             cd backend
             npm install
             npm run test
-      - notify_on_failure
+      # - notify_on_failure
             
   scan-frontend:
     executor: node
@@ -135,7 +135,7 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-      - notify_on_failure
+      # - notify_on_failure
 # If the "npm audit fix" command above could not fix all critical vulnerabilities, try “npm audit fix --force” again
           
       
@@ -153,7 +153,7 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-      - notify_on_failure
+      # - notify_on_failure
 
 
 
