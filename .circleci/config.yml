@@ -32,7 +32,7 @@ commands:
         template: success_tagged_deployment_1
 
 
- destroy-environment:
+destroy-environment:
   description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
   parameters:
     Workflow_ID:
