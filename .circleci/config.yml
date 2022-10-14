@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
   python:
     docker:
       - image: python:3.9.0-alpine
@@ -63,7 +63,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build]
+          keys: [frontend-deps]
       - run:
           name: Build front-end
           command: |
@@ -73,7 +73,7 @@ jobs:
             
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build
+          key: frontend-deps
       # - notify_on_failure
 
   build-backend:
@@ -81,7 +81,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-deps]
       - run:
           name: Back-end build
           command: |
@@ -91,69 +91,69 @@ jobs:
              
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build
+          key: backend-deps
       # - notify_on_failure
 
-  test-frontend:
-    executor: node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [frontend-test]
-      - run:
-          name: Front-end test
-          command:  |
-            cd frontend
-            npm install
-            npm run test
-      # - notify_on_failure
+  # test-frontend:
+  #   executor: node
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [frontend-test]
+  #     - run:
+  #         name: Front-end test
+  #         command:  |
+  #           cd frontend
+  #           npm install
+  #           npm run test
+  #     # - notify_on_failure
                 
-  test-backend:
-    executor: node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend-test]
-      - run:
-          name: Back-end test
-          command:  |
-            cd backend
-            npm install
-            npm run test
-      # - notify_on_failure
+#   test-backend:
+#     executor: node
+#     steps:
+#       - checkout
+#       - restore_cache:
+#           keys: [backend-test]
+#       - run:
+#           name: Back-end test
+#           command:  |
+#             cd backend
+#             npm install
+#             npm run test
+#       # - notify_on_failure
             
-  scan-frontend:
-    executor: node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [frontend-scan]
-      - run: 
-          name: Front-end scan
-          command:  |
-            cd frontend
-            npm install
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
-      # - notify_on_failure
-# If the "npm audit fix" command above could not fix all critical vulnerabilities, try “npm audit fix --force” again
+#   scan-frontend:
+#     executor: node
+#     steps:
+#       - checkout
+#       - restore_cache:
+#           keys: [frontend-scan]
+#       - run: 
+#           name: Front-end scan
+#           command:  |
+#             cd frontend
+#             npm install
+#             npm audit fix --audit-level=critical --force
+#             npm audit --audit-level=critical
+#       # - notify_on_failure
+# # If the "npm audit fix" command above could not fix all critical vulnerabilities, try “npm audit fix --force” again
           
       
 
-  scan-backend:
-    executor: node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend-scan]
-      - run:
-          name: Back-end scan
-          command:  |
-            cd frontend
-            npm install
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
-      # - notify_on_failure
+#   scan-backend:
+#     executor: node
+#     steps:
+#       - checkout
+#       - restore_cache:
+#           keys: [backend-scan]
+#       - run:
+#           name: Back-end scan
+#           command:  |
+#             cd frontend
+#             npm install
+#             npm audit fix --audit-level=critical --force
+#             npm audit --audit-level=critical
+#       # - notify_on_failure
 
 
 
@@ -162,14 +162,14 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
             
   
 
