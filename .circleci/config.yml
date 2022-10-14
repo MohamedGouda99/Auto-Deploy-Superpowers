@@ -124,38 +124,38 @@ jobs:
       
       # - notify_on_failure
             
-#   scan-frontend:
-#     executor: node
-#     steps:
-#       - checkout
-#       - restore_cache:
-#           keys: [frontend-scan]
-#       - run: 
-#           name: Front-end scan
-#           command:  |
-#             cd frontend
-#             npm install
-#             npm audit fix --audit-level=critical --force
-#             npm audit --audit-level=critical
-#       # - notify_on_failure
-# # If the "npm audit fix" command above could not fix all critical vulnerabilities, try “npm audit fix --force” again
+  scan-frontend:
+    executor: node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-scan]
+      - run: 
+          name: Front-end scan
+          command:  |
+            cd frontend
+            npm install
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
+      # - notify_on_failure
+# If the "npm audit fix" command above could not fix all critical vulnerabilities, try “npm audit fix --force” again
           
       
 
-#   scan-backend:
-#     executor: node
-#     steps:
-#       - checkout
-#       - restore_cache:
-#           keys: [backend-scan]
-#       - run:
-#           name: Back-end scan
-#           command:  |
-#             cd frontend
-#             npm install
-#             npm audit fix --audit-level=critical --force
-#             npm audit --audit-level=critical
-#       # - notify_on_failure
+  scan-backend:
+    executor: node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-scan]
+      - run:
+          name: Back-end scan
+          command:  |
+            cd frontend
+            npm install
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
+      # - notify_on_failure
 
 
 
@@ -168,10 +168,10 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
             
   
 
