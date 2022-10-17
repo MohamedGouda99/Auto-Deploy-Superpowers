@@ -179,7 +179,7 @@ jobs:
 
 
  
- deploy_infrastructure:
+  deploy-infrastructure:
     docker:
       image: cimg/base:stable
     steps:
@@ -217,7 +217,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
+           
 
   # configure-infrastructure:
   #   docker:
