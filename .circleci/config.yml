@@ -24,10 +24,6 @@ commands:
   
   install_ansible:
     description:  Install Ansible v2
-    parameters: 
-      Workflow_ID:  
-        type: string
-        default:  ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Install Ansible v2
@@ -36,17 +32,6 @@ commands:
               sudo apt install software-properties-common
               sudo add-apt-repository --yes --update ppa:ansible/ansible
               sudo apt install ansible
-
-  # destroy-environment:
-  #   description:  remove stacks and buckets
-  #   steps:
-  #     - run:
-  #         name: remove resources.
-  #         when: on_fail
-  #         commands: |
-  #             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >>
-  #             aws s3 rm s3://udapeople-<< parameters.id >> --recursive
-  #             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
 
 
 
@@ -231,8 +216,6 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      
-      # - destroy-environment
            
 
   configure-infrastructure:
@@ -243,16 +226,15 @@ jobs:
       - install_ansible
       - add_ssh_keys:
           fingerprints: ["57:25:dd:b5:e6:da:e5:9e:07:80:f6:f7:9e:71:3b:da"]
-      
       - attach_workspace:
           at: ~/
       - run:
           name: configure server
-          commands: |
-              cd .circleci/ansible
-              cat inventory.txt
-              ansible-playbook -i inventory.txt configure-server.yml
-      # - destroy-environment
+          command:  |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+
 
 
 
@@ -274,8 +256,8 @@ workflows:
           # filters:
           #   branches:
           #     only: [circleci-project-setup]
-      - configure-infrastructure:
-           requires: [deploy-infrastructure]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
             
   
 
