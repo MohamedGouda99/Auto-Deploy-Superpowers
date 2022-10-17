@@ -233,7 +233,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["57:25:dd:b5:e6:da:e5:9e:07:80:f6:f7:9e:71:3b:da"]
       # attach workspace
-      attach_workspace:
+      - attach_workspace:
         at: ~/
       
       - run:
