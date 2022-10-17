@@ -255,9 +255,9 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [circleci-project-setup]
+          # filters:
+          #   branches:
+          #     only: [circleci-project-setup]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
             
