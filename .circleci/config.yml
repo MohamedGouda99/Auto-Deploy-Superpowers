@@ -41,26 +41,25 @@ commands:
   
 
 
-destroy-environment:
-  description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-  parameters:
-    Workflow_ID:
-      type: string
-      default: ${CIRCLE_WORKFLOW_ID:0:7}
-  steps:
-    - run:
-        name: Destroy environments
-        when: on_fail
-        command: |
+# destroy-environment:
+#   description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+#   parameters:
+#     Workflow_ID:
+#       type: string
+#       default: ${CIRCLE_WORKFLOW_ID:0:7}
+#   steps:
+#     - run:
+#         name: Destroy environments
+#         when: on_fail
+#         command: |
+#           # Empty frontend bucket
+#           aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
 
-          # Delete backend stack
-          aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
-          # Empty frontend bucket
-          aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+#           # Delete frontend stack
+#           aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
 
-          # Delete frontend stack
-          aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
-
+#           # Delete backend stack
+#           aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
 #   revert-migrations:
 #     description: Revert the last migration if successfully run in the current workflow.
 #     parameters:
@@ -196,7 +195,7 @@ jobs:
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
               
       - run:
-          name: Ensure front-end infrastructure Exist
+          name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
@@ -211,41 +210,33 @@ jobs:
               --filters "Name=tag:Name,Values=backend-${CIRCLR_WORKFLOW_ID_:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
-              echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
-              cat .circleci/ansible/inventory.txt
+              echo $BACKEND_PUBLIC_IP >> Deploy_using_starter_code/.circleci/ansible/inventory.txt
+              cat Deploy_using_starter_code/.circleci/ansible/inventory.txt
             
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
-      
-      - destroy-environment
+            - project/.circleci/ansible/inventory.txt
            
 
-  configure-infrastructure:
-    docker:
-      - image: cimg/base:stable
-      # Docker image here that supports Ansible
-    steps:
-      - checkout
-      - install_ansible
-      # Add ssh keys with fingerprint
-      - add_ssh_keys:
-          fingerprints: ["57:25:dd:b5:e6:da:e5:9e:07:80:f6:f7:9e:71:3b:da"]
-      # attach workspace
-      - attach_workspace:
-          at: ~/
-      
-      - run:
-          name: Configure server
-          command: |
-            cd .circleci/ansible
-            cat inventory.txt
-            ansible-playbook -i inventory.txt configure-server.yml
-      
-      - destroy-environment
-            
-      # Here's where you will add some code to rollback on failure 
+  # configure-infrastructure:
+  #   docker:
+  #     # Docker image here that supports Ansible
+  #   steps:
+  #     # Checkout code from git
+  #     # Add ssh keys with fingerprint
+  #     # attach workspace
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           # Your code here
+  #           exit 1
+  #     - run:
+  #         name: Configure server
+  #         command: |
+  #           # Your code here
+  #           exit 1
+  #     # Here's where you will add some code to rollback on failure 
 
 
 
@@ -267,8 +258,8 @@ workflows:
           # filters:
           #   branches:
           #     only: [circleci-project-setup]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
             
   
 
