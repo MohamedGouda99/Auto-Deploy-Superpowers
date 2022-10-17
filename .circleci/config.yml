@@ -210,8 +210,8 @@ jobs:
               --filters "Name=tag:Name,Values=backend-${CIRCLR_WORKFLOW_ID_:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
-              echo $BACKEND_PUBLIC_IP >> Documents/project3/Deploy_using_starter_code/.circleci/ansible/inventory.txt
-              cat Documents/project3/Deploy_using_starter_code/.circleci/ansible/inventory.txt
+              echo $BACKEND_PUBLIC_IP >> Deploy_using_starter_code/.circleci/ansible/inventory.txt
+              cat Deploy_using_starter_code/.circleci/ansible/inventory.txt
             
       - persist_to_workspace:
           root: ~/
