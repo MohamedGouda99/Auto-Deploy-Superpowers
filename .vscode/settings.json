@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/schemas/main/f/ansible-inventory.json": "file:///d%3A/Courses/Udacity/AWS%20Cloud%20DevOps/4.%20Build%20CICD%20Pipelines%2C%20Monitoring%20%26%20Logging/Deploy_using_starter_code/.circleci/config.yml"
+    }
+}
