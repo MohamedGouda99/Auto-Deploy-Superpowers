@@ -24,6 +24,10 @@ commands:
   
   install_ansible:
     description:  Install Ansible v2
+    parameters: 
+      Workflow_ID:  
+        type: string
+        default:  ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Install Ansible v2
@@ -217,12 +221,11 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLR_WORKFLOW_ID_:0:7}" \
+           cd .circleci/ansible
+            aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text)
-              echo $BACKEND_PUBLIC_IP >> Deploy_using_starter_code/.circleci/ansible/inventory.txt
-              cat Deploy_using_starter_code/.circleci/ansible/inventory.txt
+              --output text >> inventory.txt
+            cat inventory.txt
             
       - persist_to_workspace:
           root: ~/
