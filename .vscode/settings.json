@@ -1,0 +1,14 @@
+// {
+//     "yaml.schemas": {
+//         "https://raw.githubusercontent.com/ansible/schemas/main/f/ansible.json#/$defs/playbook": "file:///home/gouda/Documents/project3/Deploy_using_starter_code/.circleci/ansible/configure-server.yml"
+//     }
+// }
+
+{
+    "python.pythonPath": "/Users/ganeshrn/Documents/ansible-collections/.env/bin/python",
+    "ansible.ansible.useFullyQualifiedCollectionNames": true,
+    "ansible.ansible.path": "/Users/ganeshrn/Documents/ansible-collections/.env/bin/ansible",
+    "ansible.ansibleLint.path": "/Users/ganeshrn/Documents/ansible-collections/.env/bin/ansible-lint",
+    "ansible.executionEnvironment.enabled": false,
+    "ansibleServer.trace.server": "verbose",
+}
