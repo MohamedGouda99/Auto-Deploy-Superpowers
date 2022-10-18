@@ -266,7 +266,7 @@ jobs:
 
 
 workflows:
-  default:
+  superpower:
     jobs:
       - build-frontend
       - build-backend
