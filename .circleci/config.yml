@@ -147,8 +147,9 @@ jobs:
           name: Back-end test
           command:  |
             cd backend
-            npm uninstall
             npm install
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
             npm run test
       
       
