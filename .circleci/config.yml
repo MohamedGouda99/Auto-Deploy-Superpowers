@@ -259,18 +259,15 @@ jobs:
     steps:
       - checkout
       - install_awscli
-      - install_nodejs
-      - restore_cache:
-          keys: [backend-deps]
+      
+      
       - run:
           name: Run migrations
           command: |
             cd backend
             npm install
-            npm audit fix
-            npm install -g typescript
             npm run migrations > migrations_dumb.txt
-            cat migrations_dump.txt
+            
             
       - run:
           name: Send migration results to kvdb.io
@@ -281,6 +278,30 @@ jobs:
               fi
       - destroy-environment
       - revert-migrations
+
+  deploy-backend:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_ansible
+      - install_nodejs
+      - add_ssh_keys:
+          fingerprints:
+            - "57:25:dd:b5:e6:da:e5:9e:07:80:f6:f7:9e:71:3b:da"
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          keys: [backend-deps]
+      - run:
+          name: Install dependencies
+          command:  |
+              cd backend
+              npm install
+
+
+  
             
             
          
@@ -312,6 +333,9 @@ workflows:
       
       - run-migrations:
           requires: [configure-infrastructure]
+      - deploy-backend:
+          requires:
+            - "run-migrations"
             
   
 
