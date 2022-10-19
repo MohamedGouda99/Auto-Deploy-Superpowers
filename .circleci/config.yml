@@ -259,7 +259,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-           at:~/project
+           at:  ~/project
       - restore_cache:
           keys: [backend-deps]
       - install_awscli
@@ -271,9 +271,9 @@ jobs:
           command: |
             pwd
             ls
+            #cd backend && npm run migrations | tee migrations-${CIRCLE_WORKFLOW_ID}.txt
             cd backend
             cat .env
-            npm install
             npm run migrations | tee migrations-${CIRCLE_WORKFLOW_ID}.txt
             cat migrations-${CIRCLE_WORKFLOW_ID}.txt
             
@@ -288,7 +288,47 @@ jobs:
       - destroy-environment
       - revert-migrations
 
- 
+  # deploy-backend:
+  #   docker:
+  #     - image: cimg/base:stable
+  #   steps:
+  #     - checkout
+  #     - install_awscli
+  #     - install_ansible
+  #     - install_nodejs
+  #     - add_ssh_keys:
+  #         fingerprints:
+  #           - "57:25:dd:b5:e6:da:e5:9e:07:80:f6:f7:9e:71:3b:da"
+  #     - attach_workspace:
+  #         at: ~/
+  #     - restore_cache:
+  #         keys: [backend-deps]
+  #     - run:
+  #         name: Install dependencies
+  #         command:  |
+  #             cd backend
+  #             npm install
+  #     - run:
+  #         name: Package Backend
+  #         command: |
+  #           cd backend
+  #           npm run build
+  #           tar -czf artifact.tar.gz dist/* package*
+  #           cd ..
+  #           cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+      
+  #     - run:
+  #         name: Deploy backend
+  #         command: |
+  #             export TYPEORM_MIGRATIONS_DIR=./migrations
+  #             export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
+  #             export TYPEORM_MIGRATIONS=./src/migrations/*.ts
+  #             cd .circleci/ansible
+  #             cat inventory.txt
+  #             ansible-playbook -i inventory.txt deploy-backend.yml
+  #     - destroy-environment
+  #     - revert-migrations
+
 
 
   
@@ -323,7 +363,9 @@ workflows:
       
       - run-migrations:
           requires: [configure-infrastructure]
-   
+      # - deploy-backend:
+      #     requires:
+      #       - "run-migrations"
             
   
 
