@@ -236,7 +236,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image:  cimg/base:stable
+      - image:  cimg/python:3.10
     steps:
       - checkout
       - install_ansible
@@ -260,8 +260,9 @@ jobs:
     steps:
       - checkout
       - install_awscli
-      # - restore_cache:
-      #     keys: [backend-deps]
+      - install_nodejs
+      - restore_cache:
+          keys: [backend-deps]
       - run:
           name: Run migrations
         
@@ -269,9 +270,6 @@ jobs:
             
             cd backend
             npm install
-            npm audit fix --audit-level=critical --force
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       # - save_cache:
