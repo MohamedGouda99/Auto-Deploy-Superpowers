@@ -264,7 +264,7 @@ jobs:
            at:  ~/project
       - restore_cache:
           keys: [backend-deps]
-      - install_awscli
+      
       
       
       - run:
@@ -275,6 +275,10 @@ jobs:
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
+      - save_cache:
+          paths:
+            - backend/node_modules
+          key: backend-deps
         
             
             
