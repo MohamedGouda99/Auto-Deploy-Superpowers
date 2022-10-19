@@ -236,10 +236,11 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image:  cimg/python:3.10
+      - image:  cimg/base:stable
     steps:
       - checkout
       - install_ansible
+      - install_awscli
       - add_ssh_keys:
           fingerprints: ["57:25:dd:b5:e6:da:e5:9e:07:80:f6:f7:9e:71:3b:da"]
       - attach_workspace:
@@ -270,6 +271,7 @@ jobs:
             
             cd backend
             npm install
+            npm run lint
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       # - save_cache:
