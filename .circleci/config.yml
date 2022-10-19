@@ -277,7 +277,7 @@ jobs:
           command: |
             if grep -q "has executed successfully." ~/project/backend/migrations_dumb.txt
             then
-              curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl https://kvdb.io/Gm2JL4883MdsABJZowh12U/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
       - destroy-environment
       - revert-migrations
@@ -302,10 +302,14 @@ jobs:
       - run:
           name: get backend URL
           command: |
-            aws ec2 describe-instances \
+            
+            export BACKEND_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-<IDENTIFIER>" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> frontend/.env
+              --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
       
       - run:
@@ -313,6 +317,7 @@ jobs:
           command: |
             cd frontend
             npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       
       - destroy-environment
