@@ -275,7 +275,7 @@ jobs:
             cd backend
             cat .env
             npm install
-            npm audit fix --force
+            npm build
             npm run migrations | tee migrations-${CIRCLE_WORKFLOW_ID}.txt
             cat migrations-${CIRCLE_WORKFLOW_ID}.txt
             
