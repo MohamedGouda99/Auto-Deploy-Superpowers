@@ -258,19 +258,15 @@ jobs:
     executor: node  
     steps:
       - checkout
-      - install_awscli
-      - install_nodejs
-      - attach_workspace:
-           at:  ~/project
       - restore_cache:
           keys: [backend-deps]
-      
-      
-      
       - run:
           name: Run migrations
         
           command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
