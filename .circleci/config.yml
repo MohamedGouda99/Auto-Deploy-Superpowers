@@ -255,26 +255,26 @@ jobs:
 
 
   run-migrations:
-    executor: node  
+    docker:
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-deps]
+      - install_awscli
+      # - restore_cache:
+      #     keys: [backend-deps]
       - run:
           name: Run migrations
         
           command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-            cd backend
+            
+            cd ../backend
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-      - save_cache:
-          paths:
-            - backend/node_modules
-          key: backend-deps
+      # - save_cache:
+      #     paths:
+      #       - backend/node_modules
+      #     key: backend-deps
         
             
             
