@@ -420,7 +420,7 @@ jobs:
 
 
 workflows:
-  superpower:
+  DeploySuperpower:
     jobs:
       - build-frontend
       - build-backend
