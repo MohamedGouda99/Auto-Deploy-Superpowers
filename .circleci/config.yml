@@ -23,15 +23,15 @@ commands:
               sudo ./aws/install
   
   install_ansible:
-    description:  Install Ansible v2
+    description:  Install Ansible 
     steps:
       - run:
-          name: Install Ansible v2
+          name: Install Ansible 
           command:  |
               sudo apt update
-              sudo apt install software-properties-common
+              sudo apt install software-properties-common -y
               sudo add-apt-repository --yes --update ppa:ansible/ansible
-              sudo apt install ansible
+              sudo apt install ansible -y
 
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -271,13 +271,49 @@ jobs:
             
             cd backend
             npm install
-            
             npm run migrations
+      - destroy-environment
+      - revert-migrations
+
+
+
+  deploy-frontend:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_nodejs
+      - restore_cache:
+          keys: [frontend-deps]
+      - run:
+          name: install dependencies
+          command: |
+              cd frontend
+              npm install
+      
+      - run:
+          name: get backend URL
+          command: |
+            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-<IDENTIFIER>" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
             
-      # - save_cache:
-      #     paths:
-      #       - backend/node_modules
-      #     key: backend-deps
+            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      
+      - run:
+          name: deploy frontend objects
+          command: |
+            cd frontend
+            npm run build
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      
+      - destroy-environment
+      - revert-migrations
+
+
         
             
             
@@ -288,9 +324,7 @@ jobs:
               then
                 curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
               fi
-      - destroy-environment
-      - revert-migrations
-
+      
   # deploy-backend:
   #   docker:
   #     - image: cimg/base:stable
@@ -366,9 +400,9 @@ workflows:
       
       - run-migrations:
           requires: [configure-infrastructure]
-      # - deploy-backend:
-      #     requires:
-      #       - "run-migrations"
+      - deploy-frontend:
+          requires:
+            - "run-migrations"
             
   
 
