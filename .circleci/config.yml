@@ -258,15 +258,24 @@ jobs:
     executor: node  
     steps:
       - checkout
+      - attach_workspace:
+           at:~/project
+      - restore_cache:
+          keys: [backend-deps]
       - install_awscli
       
       
       - run:
           name: Run migrations
+          no_output_timeout: 7m
           command: |
+            pwd
+            ls
             cd backend
+            cat .env
             npm install
-            npm run migrations > migrations_dumb.txt
+            npm run migrations | tee migrations-${CIRCLE_WORKFLOW_ID}.txt
+            cat migrations-${CIRCLE_WORKFLOW_ID}.txt
             
             
       - run:
