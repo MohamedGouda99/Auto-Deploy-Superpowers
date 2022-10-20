@@ -374,9 +374,11 @@ jobs:
 
   smoke-test:
     docker:
-      - image: amazon/aws-cli
+      - image: cimg/base:stable
     steps:
       - checkout
+      - install_awscli
+      - install_nodejs
       - run:
           name: Backend smoke test.
           command: |
