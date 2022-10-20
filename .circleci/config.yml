@@ -365,7 +365,8 @@ jobs:
 
 
   smoke-test:
-    executor: python
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - attach_workspace:
