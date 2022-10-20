@@ -420,8 +420,8 @@ jobs:
             else
               exit 1
             fi
-      - destroy-environment
-      - revert-migrations
+      # - destroy-environment
+      # - revert-migrations
 
 
 
@@ -502,8 +502,8 @@ jobs:
                aws cloudformation delete-stack --stack-name "backend-${OldWorkflowID}"
                aws cloudformation delete-stack --stack-name "frontend-${OldWorkflowID}"
              fi
-      # - destroy-environment
-      # - revert-migrations
+      - destroy-environment
+      - revert-migrations
   
 
   # cleanup:
