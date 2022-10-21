@@ -551,7 +551,7 @@ jobs:
 
 
 workflows:
-  DeploySuperpower:
+  default:
     jobs:
       - build-frontend
       - build-backend
