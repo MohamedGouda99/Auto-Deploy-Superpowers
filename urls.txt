@@ -1,0 +1,14 @@
+Public Url to GitHub repository (not private) [URL01]
+  https://github.com/MohamedGouda99/Deploy_using_starter_code.git
+
+Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
+  http://udapeople-1d4f9ed.s3-website-us-east-1.amazonaws.com
+
+Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03]
+  http://d3aejlci4bihbt.cloudfront.net
+
+Public URLs to deployed application back-end in EC2 [URL04]
+  http://ec2-3-125-115-11.eu-central-1.compute.amazonaws.com:3030/
+
+Public URL to your Prometheus Server [URL05]
+  http://ec2-44-204-68-195.compute-1.amazonaws.com:9090
